@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -37,6 +37,20 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Neobrutalism Color Palette */
+  --cream: #f7f3e9;
+  --charcoal: #2a2a2a;
+  --mocha: #8b6f47;
+  --ocean: #1e4a5f;
+  --forest: #2d5a3d;
+  --clay: #b87333;
+  --pearl: #f5f5f0;
+  --sage: #9caf88;
+  --stone: #d4c4a8;
+  --soft-mocha: #a68b5b;
+  --border: var(--charcoal);
+  --card: var(--cream);
 }
 
 .dark {
@@ -120,4 +134,165 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Neobrutalism Components */
+.neo-card {
+  border: 4px solid var(--border);
+  background-color: var(--card);
+  transition: all 0.2s ease-in-out;
+}
+
+.neo-card:hover {
+  box-shadow: 8px 8px 0px 0px rgba(42, 42, 42, 1);
+  transform: translateY(-2px);
+}
+
+.neo-button {
+  border: 4px solid var(--charcoal);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease-in-out;
+}
+
+.neo-button:hover {
+  box-shadow: 6px 6px 0px 0px rgba(42, 42, 42, 1);
+  transform: translateY(-2px);
+}
+
+.neo-button-primary {
+  background-color: var(--charcoal);
+  color: var(--cream);
+  border: 4px solid var(--charcoal);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease-in-out;
+}
+
+.neo-button-primary:hover {
+  background-color: var(--mocha);
+  border-color: var(--mocha);
+  box-shadow: 6px 6px 0px 0px rgba(42, 42, 42, 1);
+  transform: translateY(-2px);
+}
+
+.neo-button-secondary {
+  background-color: var(--cream);
+  color: var(--charcoal);
+  border: 4px solid var(--charcoal);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease-in-out;
+}
+
+.neo-button-secondary:hover {
+  background-color: var(--mocha);
+  color: var(--cream);
+  border-color: var(--mocha);
+  box-shadow: 6px 6px 0px 0px rgba(42, 42, 42, 1);
+  transform: translateY(-2px);
+}
+
+.neo-badge {
+  border: 3px solid var(--charcoal);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Utility Classes */
+.bg-cream {
+  background-color: var(--cream);
+}
+.bg-charcoal {
+  background-color: var(--charcoal);
+}
+.bg-mocha {
+  background-color: var(--mocha);
+}
+.bg-ocean {
+  background-color: var(--ocean);
+}
+.bg-forest {
+  background-color: var(--forest);
+}
+.bg-clay {
+  background-color: var(--clay);
+}
+.bg-pearl {
+  background-color: var(--pearl);
+}
+.bg-sage {
+  background-color: var(--sage);
+}
+.bg-stone {
+  background-color: var(--stone);
+}
+.bg-soft-mocha {
+  background-color: var(--soft-mocha);
+}
+
+.text-cream {
+  color: var(--cream);
+}
+.text-charcoal {
+  color: var(--charcoal);
+}
+.text-mocha {
+  color: var(--mocha);
+}
+.text-ocean {
+  color: var(--ocean);
+}
+.text-forest {
+  color: var(--forest);
+}
+.text-clay {
+  color: var(--clay);
+}
+.text-pearl {
+  color: var(--pearl);
+}
+.text-sage {
+  color: var(--sage);
+}
+.text-stone {
+  color: var(--stone);
+}
+.text-soft-mocha {
+  color: var(--soft-mocha);
+}
+
+.border-cream {
+  border-color: var(--cream);
+}
+.border-charcoal {
+  border-color: var(--charcoal);
+}
+.border-mocha {
+  border-color: var(--mocha);
+}
+.border-ocean {
+  border-color: var(--ocean);
+}
+.border-forest {
+  border-color: var(--forest);
+}
+.border-clay {
+  border-color: var(--clay);
+}
+.border-pearl {
+  border-color: var(--pearl);
+}
+.border-sage {
+  border-color: var(--sage);
+}
+.border-stone {
+  border-color: var(--stone);
+}
+.border-soft-mocha {
+  border-color: var(--soft-mocha);
 }
