@@ -1,3 +1,5 @@
+import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
 import { notFound } from "next/navigation"
 import BidForm from "@/components/bid-form"
 
@@ -5,33 +7,46 @@ interface PageProps {
   searchParams: { procurement?: string }
 }
 
-export default function CreateBidPage({ searchParams }: PageProps) {
-  const mockProfile = {
-    id: "test-user-id",
-    full_name: "Test User",
-    role: "bidder",
-    company_name: "Test Company",
+export default async function CreateBidPage({ searchParams }: PageProps) {
+  const supabase = createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect("/auth/login")
+  }
+
+  // Check if user is a bidder
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+
+  if (!profile || profile.role !== "bidder") {
+    redirect("/dashboard")
   }
 
   const procurementId = searchParams.procurement
   if (!procurementId) {
+    redirect("/dashboard/procurements")
+  }
+
+  // Get procurement details
+  const { data: procurement } = await supabase.from("procurements").select("*").eq("id", procurementId).single()
+
+  if (!procurement) {
     notFound()
   }
 
-  // Mock procurement details
-  const mockProcurement = {
-    id: procurementId,
-    title: "Servicios de Tecnología - Desarrollo de Software",
-    description: "Contratación de servicios para desarrollo de aplicaciones web",
-    buyer_name: "Ministerio de Tecnologías de la Información",
-    buyer_id: "MIN-TIC-001",
-    tender_value: 500000000,
-    currency: "COP",
-    status: "open",
-    publication_date: "2024-01-15",
-    closing_date: "2024-02-15",
-    category: "Tecnología",
-    location: "Bogotá, Colombia",
+  // Check if user already has a bid for this procurement
+  const { data: existingBid } = await supabase
+    .from("bids")
+    .select("id")
+    .eq("procurement_id", procurementId)
+    .eq("bidder_id", user.id)
+    .single()
+
+  if (existingBid) {
+    redirect(`/dashboard/bids/${existingBid.id}/edit`)
   }
 
   return (
@@ -49,7 +64,7 @@ export default function CreateBidPage({ searchParams }: PageProps) {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <BidForm procurement={mockProcurement} mode="create" />
+        <BidForm procurement={procurement} mode="create" />
       </main>
     </div>
   )

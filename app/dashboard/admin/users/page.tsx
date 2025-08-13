@@ -1,3 +1,5 @@
+import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -5,48 +7,42 @@ import { Input } from "@/components/ui/input"
 import { Users, Search, Building, Shield, User } from "lucide-react"
 import Link from "next/link"
 
-export default function AdminUsersPage() {
-  const mockProfile = {
-    id: "test-admin-id",
-    full_name: "Test Administrator",
-    role: "administrator",
-    company_name: "Test Company",
+export default async function AdminUsersPage() {
+  const supabase = createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect("/auth/login")
   }
 
-  // Mock users data
-  const mockUsers = [
-    {
-      id: "user-1",
-      full_name: "Juan Pérez",
-      email: "juan@techsolutions.com",
-      role: "bidder",
-      company_name: "TechSolutions S.A.S.",
-      created_at: "2024-01-15",
-    },
-    {
-      id: "user-2",
-      full_name: "María González",
-      email: "maria@procurement.gov.co",
-      role: "procurement_officer",
-      company_name: "Ministerio de Tecnologías",
-      created_at: "2024-01-10",
-    },
-    {
-      id: "user-3",
-      full_name: "Carlos Admin",
-      email: "carlos@admin.com",
-      role: "administrator",
-      company_name: null,
-      created_at: "2024-01-01",
-    },
-  ]
+  // Check if user has admin role
+  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
 
-  // Mock role statistics
-  const roleStats = [
-    { role: "administrator", count: 1 },
-    { role: "procurement_officer", count: 1 },
-    { role: "bidder", count: 1 },
-  ]
+  if (!profile || profile.role !== "administrator") {
+    redirect("/dashboard")
+  }
+
+  // Get all users with their profiles
+  const { data: users } = await supabase.from("profiles").select("*").order("created_at", { ascending: false })
+
+  // Get user statistics by role
+  const { data: roleStats } = await supabase
+    .from("profiles")
+    .select("role")
+    .then(({ data }) => {
+      if (!data) return []
+      const stats = data.reduce(
+        (acc, user) => {
+          acc[user.role] = (acc[user.role] || 0) + 1
+          return acc
+        },
+        {} as Record<string, number>,
+      )
+      return Object.entries(stats).map(([role, count]) => ({ role, count }))
+    })
 
   const getRoleIcon = (role: string) => {
     switch (role) {
@@ -144,14 +140,14 @@ export default function AdminUsersPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              <span>Usuarios ({mockUsers?.length || 0})</span>
+              <span>Usuarios ({users?.length || 0})</span>
               <Button className="bg-blue-600 hover:bg-blue-700">Invitar Usuario</Button>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockUsers && mockUsers.length > 0 ? (
-                mockUsers.map((userProfile) => (
+              {users && users.length > 0 ? (
+                users.map((userProfile) => (
                   <div
                     key={userProfile.id}
                     className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"

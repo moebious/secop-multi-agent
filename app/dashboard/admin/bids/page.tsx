@@ -1,3 +1,5 @@
+import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -5,80 +7,45 @@ import { Input } from "@/components/ui/input"
 import { FileText, Search, Star, Eye, Edit } from "lucide-react"
 import Link from "next/link"
 
-export default function AdminBidsPage() {
-  const mockProfile = {
-    id: "test-admin-id",
-    full_name: "Test Administrator",
-    role: "administrator",
-    company_name: "Test Company",
+export default async function AdminBidsPage() {
+  const supabase = createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect("/auth/login")
   }
 
-  // Mock bids data
-  const mockBids = [
-    {
-      id: 1,
-      procurement_id: 1,
-      bidder_id: "test-bidder-1",
-      bid_amount: 450000000,
-      notes: "Propuesta técnica completa con experiencia comprobada",
-      status: "submitted",
-      created_at: "2024-01-25",
-      technical_score: 85,
-      financial_score: 90,
-      total_score: 87.5,
-      procurement: {
-        id: 1,
-        title: "Servicios de Tecnología - Desarrollo de Software",
-        buyer_name: "Ministerio de Tecnologías",
-        status: "open",
-        closing_date: "2024-02-15",
-        tender_value: 500000000,
-        currency: "COP",
-      },
-      bidder: {
-        id: "test-bidder-1",
-        full_name: "Juan Pérez",
-        company_name: "TechSolutions S.A.S.",
-        email: "juan@techsolutions.com",
-      },
-    },
-    {
-      id: 2,
-      procurement_id: 1,
-      bidder_id: "test-bidder-2",
-      bid_amount: 480000000,
-      notes: "Propuesta innovadora con tecnología de punta",
-      status: "under_review",
-      created_at: "2024-01-26",
-      technical_score: null,
-      financial_score: null,
-      total_score: null,
-      procurement: {
-        id: 1,
-        title: "Servicios de Tecnología - Desarrollo de Software",
-        buyer_name: "Ministerio de Tecnologías",
-        status: "open",
-        closing_date: "2024-02-15",
-        tender_value: 500000000,
-        currency: "COP",
-      },
-      bidder: {
-        id: "test-bidder-2",
-        full_name: "María González",
-        company_name: "InnovaTech Ltda.",
-        email: "maria@innovatech.com",
-      },
-    },
-  ]
+  // Check if user has admin or procurement officer role
+  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
 
-  // Mock bid statistics
-  const bidStats = mockBids.reduce(
-    (acc, bid) => {
-      acc[bid.status] = (acc[bid.status] || 0) + 1
-      return acc
-    },
-    {} as Record<string, number>,
-  )
+  if (!profile || !["administrator", "procurement_officer"].includes(profile.role)) {
+    redirect("/dashboard")
+  }
+
+  // Get all bids with related data
+  const { data: bids } = await supabase
+    .from("bids")
+    .select(
+      `
+      *,
+      procurement:procurements(id, title, buyer_name, status, closing_date, tender_value, currency),
+      bidder:profiles(id, full_name, company_name, email)
+    `,
+    )
+    .order("created_at", { ascending: false })
+
+  // Get bid statistics
+  const bidStats =
+    bids?.reduce(
+      (acc, bid) => {
+        acc[bid.status] = (acc[bid.status] || 0) + 1
+        return acc
+      },
+      {} as Record<string, number>,
+    ) || {}
 
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat("es-CO", {
@@ -177,12 +144,12 @@ export default function AdminBidsPage() {
         {/* Bids List */}
         <Card>
           <CardHeader>
-            <CardTitle>Ofertas ({mockBids?.length || 0})</CardTitle>
+            <CardTitle>Ofertas ({bids?.length || 0})</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockBids && mockBids.length > 0 ? (
-                mockBids.map((bid) => (
+              {bids && bids.length > 0 ? (
+                bids.map((bid) => (
                   <div
                     key={bid.id}
                     className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"

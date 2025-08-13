@@ -1,47 +1,32 @@
 "use client"
 
+import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Bell, Info, AlertTriangle, CheckCircle, XCircle } from "lucide-react"
 import Link from "next/link"
 
-export default function NotificationsPage() {
-  // Mock notifications data
-  const mockNotifications = [
-    {
-      id: 1,
-      title: "Nueva Oferta Recibida",
-      message: "Juan Pérez ha enviado una oferta para 'Servicios de Tecnología - Desarrollo de Software'",
-      type: "info",
-      read: false,
-      created_at: new Date().toISOString(),
-      procurement_id: "1",
-      bid_id: "1",
-    },
-    {
-      id: 2,
-      title: "Proceso Próximo a Cerrar",
-      message: "El proceso 'Suministro de Equipos de Oficina' cierra el 20 de febrero. Asegúrate de enviar tu oferta.",
-      type: "warning",
-      read: false,
-      created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      procurement_id: "2",
-      bid_id: null,
-    },
-    {
-      id: 3,
-      title: "Evaluación de Oferta",
-      message: "Tu oferta ha sido aceptada para 'Servicios de Consultoría' (Puntuación: 92.5)",
-      type: "success",
-      read: true,
-      created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      procurement_id: "3",
-      bid_id: "3",
-    },
-  ]
+export default async function NotificationsPage() {
+  const supabase = createClient()
 
-  const unreadCount = mockNotifications?.filter((n) => !n.read).length || 0
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect("/auth/login")
+  }
+
+  // Get user's notifications
+  const { data: notifications } = await supabase
+    .from("notifications")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+
+  const unreadCount = notifications?.filter((n) => !n.read).length || 0
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -107,7 +92,7 @@ export default function NotificationsPage() {
               <Bell className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{mockNotifications?.length || 0}</div>
+              <div className="text-2xl font-bold">{notifications?.length || 0}</div>
               <p className="text-xs text-muted-foreground">notificaciones</p>
             </CardContent>
           </Card>
@@ -129,7 +114,7 @@ export default function NotificationsPage() {
               <CheckCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{(mockNotifications?.length || 0) - unreadCount}</div>
+              <div className="text-2xl font-bold text-green-600">{(notifications?.length || 0) - unreadCount}</div>
               <p className="text-xs text-muted-foreground">completadas</p>
             </CardContent>
           </Card>
@@ -149,8 +134,8 @@ export default function NotificationsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockNotifications && mockNotifications.length > 0 ? (
-                mockNotifications.map((notification) => (
+              {notifications && notifications.length > 0 ? (
+                notifications.map((notification) => (
                   <div
                     key={notification.id}
                     className={`p-4 border-l-4 rounded-r-lg ${getNotificationColor(notification.type)} ${
