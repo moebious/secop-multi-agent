@@ -1,6 +1,7 @@
 "use client"
 
 import { Badge } from "@/components/ui/badge"
+import DashboardNav from "@/components/dashboard-nav"
 
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
@@ -72,6 +73,9 @@ export default async function DashboardPage() {
         </div>
       </header>
 
+      {/* Navigation Menu */}
+      <DashboardNav userRole={profile.role} />
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -118,26 +122,6 @@ export default async function DashboardPage() {
               <p className="text-xs text-muted-foreground">Mensajes nuevos</p>
             </CardContent>
           </Card>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Acciones Rápidas</h2>
-          <div className="flex flex-wrap gap-4">
-            <Link href="/dashboard/procurements">
-              <Button className="bg-blue-600 hover:bg-blue-700">Ver Todos los Procesos</Button>
-            </Link>
-            {profile.role === "bidder" && (
-              <Link href="/dashboard/bids">
-                <Button variant="outline">Mis Ofertas</Button>
-              </Link>
-            )}
-            {["administrator", "procurement_officer"].includes(profile.role) && (
-              <Button variant="outline" onClick={() => fetch("/api/procurements/sync", { method: "POST" })}>
-                Sincronizar SECOP II
-              </Button>
-            )}
-          </div>
         </div>
 
         {/* Recent Procurements */}
