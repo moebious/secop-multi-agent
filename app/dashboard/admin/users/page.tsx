@@ -178,11 +178,19 @@ export default function AdminUsersPage() {
                             Registrado: {new Date(userProfile.created_at).toLocaleDateString("es-CO")}
                           </p>
                         </div>
-                        <div className="flex gap-2 flex-shrink-0">
-                          <Button size="sm" variant="outline" className="text-xs px-3 bg-transparent">
+                        <div className="flex gap-2 w-full sm:w-auto sm:flex-shrink-0">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-xs px-3 bg-transparent flex-1 sm:flex-initial"
+                          >
                             Editar
                           </Button>
-                          <Button size="sm" variant="outline" className="text-xs px-3 bg-transparent">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-xs px-3 bg-transparent flex-1 sm:flex-initial"
+                          >
                             Ver Perfil
                           </Button>
                         </div>
