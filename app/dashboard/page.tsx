@@ -7,7 +7,6 @@ import { TrendingUp, Users, FileText, Bell } from "lucide-react"
 import Link from "next/link"
 import NotificationCenter from "@/components/notification-center"
 import QuickActionsDropdown from "@/components/top-bar-navigation"
-import { ThemeToggle } from "@/components/theme-toggle"
 import { useProcurements } from "@/hooks/use-procurements"
 import { useBids } from "@/hooks/use-bids"
 import { useNotifications } from "@/hooks/use-notifications"
@@ -64,7 +63,6 @@ export default function DashboardPage() {
                         ? "LICITADOR"
                         : mockProfile?.role || "USUARIO"}
                 </Badge>
-                <ThemeToggle />
                 <NotificationCenter />
               </div>
             </div>
@@ -157,7 +155,7 @@ export default function DashboardPage() {
             {["administrator", "procurement_officer"].includes(mockProfile?.role) && (
               <Link href="/dashboard/admin" className="w-full lg:w-auto">
                 <Button className="neo-button-primary text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-3 sm:py-4 w-full lg:w-auto">
-                  PANEL ADMIN
+                  PANEL DE ADMINISTRADOR
                 </Button>
               </Link>
             )}

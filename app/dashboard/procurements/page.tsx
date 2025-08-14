@@ -32,7 +32,6 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import NotificationCenter from "@/components/notification-center"
-import { ThemeToggle } from "@/components/theme-toggle"
 
 // Mock procurement data based on SECOP II structure
 const mockProcurements = [
@@ -225,8 +224,8 @@ export default function ProcurementsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="neo-card border-b-4 border-border rounded-none">
+    <div className="min-h-screen bg-cream">
+      <header className="neo-card border-b-4 border-charcoal rounded-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 sm:py-6 gap-4 sm:gap-0">
             <div className="flex items-center gap-4 flex-1 min-w-0">
@@ -236,10 +235,10 @@ export default function ProcurementsPage() {
                 </Button>
               </Link>
               <div className="flex-1 min-w-0">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-foreground uppercase tracking-widest truncate">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-charcoal uppercase tracking-widest truncate">
                   PROCESOS DE CONTRATACIÓN
                 </h1>
-                <p className="text-muted-foreground font-bold text-sm sm:text-base lg:text-lg uppercase truncate">
+                <p className="text-charcoal/80 font-bold text-sm sm:text-base lg:text-lg uppercase truncate">
                   EXPLORA OPORTUNIDADES DE CONTRATACIÓN PÚBLICA DEL SISTEMA SECOP II
                 </p>
               </div>
@@ -249,9 +248,8 @@ export default function ProcurementsPage() {
                 <Button className="neo-button-primary text-sm sm:text-base px-4 sm:px-6">INICIO</Button>
               </Link>
               <div className="flex items-center gap-2 sm:gap-4">
-                <ThemeToggle />
                 <NotificationCenter />
-                <Badge className="neo-badge bg-neo-mocha text-neo-cream border-border text-xs sm:text-sm">
+                <Badge className="neo-badge bg-mocha text-cream border-charcoal text-xs sm:text-sm">
                   {mockProfile.role === "administrator"
                     ? "ADMINISTRADOR"
                     : mockProfile.role === "procurement_officer"
@@ -272,19 +270,19 @@ export default function ProcurementsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 w-full">
             <div className="sm:col-span-2 lg:col-span-2 min-w-0">
               <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 z-10" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-charcoal/60 h-4 w-4 z-10" />
                 <Input
                   placeholder="BUSCAR PROCESOS..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-4 border-border focus:border-ring font-bold uppercase w-full text-sm sm:text-base"
+                  className="pl-10 border-4 border-charcoal focus:border-mocha font-bold uppercase w-full text-sm sm:text-base"
                 />
               </div>
             </div>
 
             <div className="min-w-0">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="border-4 border-border font-bold w-full text-sm sm:text-base">
+                <SelectTrigger className="border-4 border-charcoal font-bold w-full text-sm sm:text-base">
                   <SelectValue placeholder="ESTADO" />
                 </SelectTrigger>
                 <SelectContent>
@@ -298,7 +296,7 @@ export default function ProcurementsPage() {
 
             <div className="min-w-0">
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="border-4 border-border font-bold w-full text-sm sm:text-base">
+                <SelectTrigger className="border-4 border-charcoal font-bold w-full text-sm sm:text-base">
                   <SelectValue placeholder="CATEGORÍA" />
                 </SelectTrigger>
                 <SelectContent>
@@ -313,7 +311,7 @@ export default function ProcurementsPage() {
 
             <div className="min-w-0">
               <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
-                <SelectTrigger className="border-4 border-border font-bold w-full text-sm sm:text-base">
+                <SelectTrigger className="border-4 border-charcoal font-bold w-full text-sm sm:text-base">
                   <SelectValue placeholder="DEPARTAMENTO" />
                 </SelectTrigger>
                 <SelectContent>
@@ -330,7 +328,7 @@ export default function ProcurementsPage() {
 
         {/* Results Summary */}
         <div className="mb-4 sm:mb-6">
-          <p className="text-foreground font-black uppercase tracking-wide text-sm sm:text-base">
+          <p className="text-charcoal font-black uppercase tracking-wide text-sm sm:text-base">
             MOSTRANDO {filteredProcurements.length} DE {mockProcurements.length} PROCESOS
           </p>
         </div>
@@ -340,18 +338,18 @@ export default function ProcurementsPage() {
           {filteredProcurements.map((procurement) => (
             <Card
               key={procurement.id}
-              className="neo-card hover:shadow-[12px_12px_0px_0px_var(--neo-shadow)] transition-all duration-200 h-full flex flex-col"
+              className="neo-card hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 h-full flex flex-col"
             >
               <CardHeader className="pb-3 sm:pb-4">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-2 sm:gap-0">
                   <Badge
-                    className={`${getStatusColor(procurement.status)} border-2 border-border text-xs sm:text-sm self-start`}
+                    className={`${getStatusColor(procurement.status)} border-2 border-charcoal text-xs sm:text-sm self-start`}
                   >
                     {procurement.status}
                   </Badge>
-                  <span className="text-xs sm:text-sm font-mono text-muted-foreground">{procurement.processId}</span>
+                  <span className="text-xs sm:text-sm font-mono text-charcoal/60">{procurement.processId}</span>
                 </div>
-                <CardTitle className="text-lg sm:text-xl font-bold text-foreground leading-tight">
+                <CardTitle className="text-lg sm:text-xl font-bold text-charcoal leading-tight">
                   {procurement.title}
                 </CardTitle>
               </CardHeader>
@@ -359,27 +357,27 @@ export default function ProcurementsPage() {
               <CardContent className="flex flex-col flex-1 justify-between space-y-3 sm:space-y-4">
                 <div className="space-y-3 sm:space-y-4 flex-1">
                   <div className="space-y-2">
-                    <div className="flex items-start gap-2 text-muted-foreground">
+                    <div className="flex items-start gap-2 text-charcoal/80">
                       <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
                       <span className="font-medium text-sm sm:text-base">{procurement.entity}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="flex items-center gap-2 text-charcoal/80">
                       <MapPin className="h-4 w-4 flex-shrink-0" />
                       <span className="text-sm sm:text-base">{procurement.department}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="flex items-center gap-2 text-charcoal/80">
                       <DollarSign className="h-4 w-4 flex-shrink-0" />
-                      <span className="font-bold text-neo-mocha text-sm sm:text-base">
+                      <span className="font-bold text-mocha text-sm sm:text-base">
                         {formatCurrency(procurement.value)}
                       </span>
                     </div>
                   </div>
 
                   <div className="flex-1">
-                    <p className="text-muted-foreground text-sm line-clamp-3">{procurement.description}</p>
+                    <p className="text-charcoal/70 text-sm line-clamp-3">{procurement.description}</p>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs sm:text-sm text-muted-foreground gap-2 sm:gap-0">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs sm:text-sm text-charcoal/60 gap-2 sm:gap-0">
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4 flex-shrink-0" />
                       <span>Cierra: {new Date(procurement.endDate).toLocaleDateString("es-CO")}</span>
@@ -399,9 +397,9 @@ export default function ProcurementsPage() {
                         Ver Detalles
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-background border-4 border-border mx-4">
+                    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-cream border-4 border-charcoal mx-4">
                       <DialogHeader>
-                        <DialogTitle className="text-xl sm:text-2xl font-black text-foreground uppercase tracking-wide">
+                        <DialogTitle className="text-xl sm:text-2xl font-black text-charcoal uppercase tracking-wide">
                           DETALLES DEL PROCESO
                         </DialogTitle>
                       </DialogHeader>
@@ -411,55 +409,55 @@ export default function ProcurementsPage() {
                         <div className="neo-card p-3 sm:p-4">
                           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 sm:mb-4 gap-2 sm:gap-0">
                             <Badge
-                              className={`${getStatusColor(procurement.status)} border-2 border-border text-xs sm:text-sm self-start`}
+                              className={`${getStatusColor(procurement.status)} border-2 border-charcoal text-xs sm:text-sm self-start`}
                             >
                               {procurement.status}
                             </Badge>
-                            <span className="text-xs sm:text-sm font-mono text-muted-foreground">
+                            <span className="text-xs sm:text-sm font-mono text-charcoal/60">
                               {procurement.processId}
                             </span>
                           </div>
-                          <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">{procurement.title}</h3>
-                          <p className="text-muted-foreground text-sm sm:text-base">{procurement.description}</p>
+                          <h3 className="text-lg sm:text-xl font-bold text-charcoal mb-2">{procurement.title}</h3>
+                          <p className="text-charcoal/70 text-sm sm:text-base">{procurement.description}</p>
                         </div>
 
                         {/* Process Details Grid */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
                           <div className="neo-card p-3 sm:p-4">
-                            <h4 className="font-black text-foreground mb-2 sm:mb-3 uppercase tracking-wide flex items-center gap-2 text-sm sm:text-base">
+                            <h4 className="font-black text-charcoal mb-2 sm:mb-3 uppercase tracking-wide flex items-center gap-2 text-sm sm:text-base">
                               <Building className="h-4 w-4" />
                               ENTIDAD CONTRATANTE
                             </h4>
-                            <p className="text-foreground font-medium text-sm sm:text-base">{procurement.entity}</p>
-                            <p className="text-muted-foreground text-xs sm:text-sm mt-1">{procurement.department}</p>
+                            <p className="text-charcoal font-medium text-sm sm:text-base">{procurement.entity}</p>
+                            <p className="text-charcoal/70 text-xs sm:text-sm mt-1">{procurement.department}</p>
                           </div>
 
                           <div className="neo-card p-3 sm:p-4">
-                            <h4 className="font-black text-foreground mb-2 sm:mb-3 uppercase tracking-wide flex items-center gap-2 text-sm sm:text-base">
+                            <h4 className="font-black text-charcoal mb-2 sm:mb-3 uppercase tracking-wide flex items-center gap-2 text-sm sm:text-base">
                               <DollarSign className="h-4 w-4" />
                               VALOR ESTIMADO
                             </h4>
-                            <p className="text-xl sm:text-2xl font-bold text-neo-mocha">
+                            <p className="text-xl sm:text-2xl font-bold text-mocha">
                               {formatCurrency(procurement.value)}
                             </p>
-                            <p className="text-muted-foreground text-xs sm:text-sm mt-1">Valor total del contrato</p>
+                            <p className="text-charcoal/70 text-xs sm:text-sm mt-1">Valor total del contrato</p>
                           </div>
 
                           <div className="neo-card p-3 sm:p-4">
-                            <h4 className="font-black text-foreground mb-2 sm:mb-3 uppercase tracking-wide flex items-center gap-2 text-sm sm:text-base">
+                            <h4 className="font-black text-charcoal mb-2 sm:mb-3 uppercase tracking-wide flex items-center gap-2 text-sm sm:text-base">
                               <Clock className="h-4 w-4" />
                               CRONOGRAMA
                             </h4>
                             <div className="space-y-2 text-xs sm:text-sm">
                               <div className="flex justify-between">
-                                <span className="text-muted-foreground">Inicio:</span>
-                                <span className="font-medium text-foreground">
+                                <span className="text-charcoal/70">Inicio:</span>
+                                <span className="font-medium text-charcoal">
                                   {new Date(procurement.startDate).toLocaleDateString("es-CO")}
                                 </span>
                               </div>
                               <div className="flex justify-between">
-                                <span className="text-muted-foreground">Cierre:</span>
-                                <span className="font-medium text-foreground">
+                                <span className="text-charcoal/70">Cierre:</span>
+                                <span className="font-medium text-charcoal">
                                   {new Date(procurement.endDate).toLocaleDateString("es-CO")}
                                 </span>
                               </div>
@@ -467,29 +465,29 @@ export default function ProcurementsPage() {
                           </div>
 
                           <div className="neo-card p-3 sm:p-4">
-                            <h4 className="font-black text-foreground mb-2 sm:mb-3 uppercase tracking-wide flex items-center gap-2 text-sm sm:text-base">
+                            <h4 className="font-black text-charcoal mb-2 sm:mb-3 uppercase tracking-wide flex items-center gap-2 text-sm sm:text-base">
                               <Users className="h-4 w-4" />
                               PARTICIPACIÓN
                             </h4>
-                            <p className="text-xl sm:text-2xl font-bold text-neo-forest">{procurement.bidders}</p>
-                            <p className="text-muted-foreground text-xs sm:text-sm mt-1">Oferentes registrados</p>
+                            <p className="text-xl sm:text-2xl font-bold text-forest">{procurement.bidders}</p>
+                            <p className="text-charcoal/70 text-xs sm:text-sm mt-1">Oferentes registrados</p>
                           </div>
                         </div>
 
                         {/* Additional Information */}
                         <div className="neo-card p-3 sm:p-4">
-                          <h4 className="font-black text-foreground mb-2 sm:mb-3 uppercase tracking-wide flex items-center gap-2 text-sm sm:text-base">
+                          <h4 className="font-black text-charcoal mb-2 sm:mb-3 uppercase tracking-wide flex items-center gap-2 text-sm sm:text-base">
                             <Hash className="h-4 w-4" />
                             INFORMACIÓN ADICIONAL
                           </h4>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm">
                             <div>
-                              <span className="text-muted-foreground">Categoría:</span>
-                              <span className="ml-2 font-medium text-foreground">{procurement.category}</span>
+                              <span className="text-charcoal/70">Categoría:</span>
+                              <span className="ml-2 font-medium text-charcoal">{procurement.category}</span>
                             </div>
                             <div>
-                              <span className="text-muted-foreground">ID del Proceso:</span>
-                              <span className="ml-2 font-mono text-foreground break-all">{procurement.id}</span>
+                              <span className="text-charcoal/70">ID del Proceso:</span>
+                              <span className="ml-2 font-mono text-charcoal break-all">{procurement.id}</span>
                             </div>
                           </div>
                         </div>
@@ -528,29 +526,29 @@ export default function ProcurementsPage() {
         {/* Empty State */}
         {filteredProcurements.length === 0 && (
           <div className="neo-card p-8 sm:p-12 text-center">
-            <Filter className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg sm:text-xl font-black text-foreground mb-2 uppercase tracking-wide">
+            <Filter className="h-12 w-12 sm:h-16 sm:w-16 text-charcoal/40 mx-auto mb-4" />
+            <h3 className="text-lg sm:text-xl font-black text-charcoal mb-2 uppercase tracking-wide">
               NO SE ENCONTRARON PROCESOS
             </h3>
-            <p className="text-muted-foreground font-bold uppercase text-sm sm:text-base">
+            <p className="text-charcoal/60 font-bold uppercase text-sm sm:text-base">
               INTENTA AJUSTAR LOS FILTROS DE BÚSQUEDA PARA ENCONTRAR MÁS OPORTUNIDADES
             </p>
           </div>
         )}
 
         <Dialog open={!!biddingProcurement} onOpenChange={handleCloseBidModal}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-background border-4 border-border mx-4">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-cream border-4 border-charcoal mx-4">
             <DialogHeader>
-              <DialogTitle className="text-xl sm:text-2xl font-black text-foreground uppercase tracking-wide">
+              <DialogTitle className="text-xl sm:text-2xl font-black text-charcoal uppercase tracking-wide">
                 {bidSubmitted ? "OFERTA ENVIADA" : "CREAR OFERTA"}
               </DialogTitle>
             </DialogHeader>
 
             {bidSubmitted ? (
               <div className="text-center py-8">
-                <CheckCircle className="h-16 w-16 text-neo-forest mx-auto mb-4" />
-                <h3 className="text-xl font-black text-foreground mb-2 uppercase">¡OFERTA ENVIADA EXITOSAMENTE!</h3>
-                <p className="text-muted-foreground mb-6">
+                <CheckCircle className="h-16 w-16 text-forest mx-auto mb-4" />
+                <h3 className="text-xl font-black text-charcoal mb-2 uppercase">¡OFERTA ENVIADA EXITOSAMENTE!</h3>
+                <p className="text-charcoal/70 mb-6">
                   Tu oferta para "{biddingProcurement?.title}" ha sido registrada correctamente.
                 </p>
                 <Button onClick={handleCloseBidModal} className="neo-button-primary">
@@ -564,13 +562,15 @@ export default function ProcurementsPage() {
                   {[1, 2, 3].map((step) => (
                     <div key={step} className="flex items-center">
                       <div
-                        className={`w-8 h-8 rounded-full border-2 border-border flex items-center justify-center font-bold text-sm ${
-                          step <= bidStep ? "bg-neo-mocha text-neo-cream" : "bg-background text-foreground"
+                        className={`w-8 h-8 rounded-full border-2 border-charcoal flex items-center justify-center font-bold text-sm ${
+                          step <= bidStep ? "bg-mocha text-cream" : "bg-cream text-charcoal"
                         }`}
                       >
                         {step}
                       </div>
-                      {step < 3 && <div className={`w-12 h-1 mx-2 ${step < bidStep ? "bg-neo-mocha" : "bg-muted"}`} />}
+                      {step < 3 && (
+                        <div className={`w-12 h-1 mx-2 ${step < bidStep ? "bg-mocha" : "bg-charcoal/30"}`} />
+                      )}
                     </div>
                   ))}
                 </div>
@@ -578,51 +578,51 @@ export default function ProcurementsPage() {
                 {/* Step Content */}
                 {bidStep === 1 && (
                   <div className="space-y-4">
-                    <h3 className="text-lg font-black text-foreground uppercase">INFORMACIÓN DE LA EMPRESA</h3>
+                    <h3 className="text-lg font-black text-charcoal uppercase">INFORMACIÓN DE LA EMPRESA</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-foreground font-bold uppercase">Nombre de la Empresa</Label>
+                        <Label className="text-charcoal font-bold uppercase">Nombre de la Empresa</Label>
                         <Input
                           value={bidForm.companyName}
                           onChange={(e) => setBidForm((prev) => ({ ...prev, companyName: e.target.value }))}
-                          className="border-2 border-border"
+                          className="border-2 border-charcoal"
                           placeholder="Ingresa el nombre de tu empresa"
                         />
                       </div>
                       <div>
-                        <Label className="text-foreground font-bold uppercase">NIT</Label>
+                        <Label className="text-charcoal font-bold uppercase">NIT</Label>
                         <Input
                           value={bidForm.companyNIT}
                           onChange={(e) => setBidForm((prev) => ({ ...prev, companyNIT: e.target.value }))}
-                          className="border-2 border-border"
+                          className="border-2 border-charcoal"
                           placeholder="123456789-0"
                         />
                       </div>
                       <div>
-                        <Label className="text-foreground font-bold uppercase">Representante Legal</Label>
+                        <Label className="text-charcoal font-bold uppercase">Representante Legal</Label>
                         <Input
                           value={bidForm.legalRepresentative}
                           onChange={(e) => setBidForm((prev) => ({ ...prev, legalRepresentative: e.target.value }))}
-                          className="border-2 border-border"
+                          className="border-2 border-charcoal"
                           placeholder="Nombre completo"
                         />
                       </div>
                       <div>
-                        <Label className="text-foreground font-bold uppercase">Email</Label>
+                        <Label className="text-charcoal font-bold uppercase">Email</Label>
                         <Input
                           type="email"
                           value={bidForm.email}
                           onChange={(e) => setBidForm((prev) => ({ ...prev, email: e.target.value }))}
-                          className="border-2 border-border"
+                          className="border-2 border-charcoal"
                           placeholder="empresa@ejemplo.com"
                         />
                       </div>
                       <div className="md:col-span-2">
-                        <Label className="text-foreground font-bold uppercase">Teléfono</Label>
+                        <Label className="text-charcoal font-bold uppercase">Teléfono</Label>
                         <Input
                           value={bidForm.phone}
                           onChange={(e) => setBidForm((prev) => ({ ...prev, phone: e.target.value }))}
-                          className="border-2 border-border"
+                          className="border-2 border-charcoal"
                           placeholder="+57 300 123 4567"
                         />
                       </div>
@@ -632,52 +632,52 @@ export default function ProcurementsPage() {
 
                 {bidStep === 2 && (
                   <div className="space-y-4">
-                    <h3 className="text-lg font-black text-foreground uppercase">DETALLES DE LA OFERTA</h3>
+                    <h3 className="text-lg font-black text-charcoal uppercase">DETALLES DE LA OFERTA</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-foreground font-bold uppercase">Valor de la Oferta (COP)</Label>
+                        <Label className="text-charcoal font-bold uppercase">Valor de la Oferta (COP)</Label>
                         <Input
                           type="number"
                           value={bidForm.bidAmount}
                           onChange={(e) => setBidForm((prev) => ({ ...prev, bidAmount: e.target.value }))}
-                          className="border-2 border-border"
+                          className="border-2 border-charcoal"
                           placeholder="2500000000"
                         />
                       </div>
                       <div>
-                        <Label className="text-foreground font-bold uppercase">Tiempo de Entrega (días)</Label>
+                        <Label className="text-charcoal font-bold uppercase">Tiempo de Entrega (días)</Label>
                         <Input
                           type="number"
                           value={bidForm.deliveryTime}
                           onChange={(e) => setBidForm((prev) => ({ ...prev, deliveryTime: e.target.value }))}
-                          className="border-2 border-border"
+                          className="border-2 border-charcoal"
                           placeholder="90"
                         />
                       </div>
                     </div>
                     <div>
-                      <Label className="text-foreground font-bold uppercase">Propuesta Técnica</Label>
+                      <Label className="text-charcoal font-bold uppercase">Propuesta Técnica</Label>
                       <Textarea
                         value={bidForm.technicalProposal}
                         onChange={(e) => setBidForm((prev) => ({ ...prev, technicalProposal: e.target.value }))}
-                        className="border-2 border-border min-h-[100px]"
+                        className="border-2 border-charcoal min-h-[100px]"
                         placeholder="Describe tu propuesta técnica..."
                       />
                     </div>
                     <div>
-                      <Label className="text-foreground font-bold uppercase">Propuesta Económica</Label>
+                      <Label className="text-charcoal font-bold uppercase">Propuesta Económica</Label>
                       <Textarea
                         value={bidForm.economicProposal}
                         onChange={(e) => setBidForm((prev) => ({ ...prev, economicProposal: e.target.value }))}
-                        className="border-2 border-border min-h-[100px]"
+                        className="border-2 border-charcoal min-h-[100px]"
                         placeholder="Describe tu propuesta económica..."
                       />
                     </div>
                     <div>
-                      <Label className="text-foreground font-bold uppercase">Documentos</Label>
-                      <div className="border-2 border-dashed border-border p-4 text-center">
-                        <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                        <p className="text-muted-foreground mb-2">Arrastra archivos aquí o haz clic para seleccionar</p>
+                      <Label className="text-charcoal font-bold uppercase">Documentos</Label>
+                      <div className="border-2 border-dashed border-charcoal p-4 text-center">
+                        <Upload className="h-8 w-8 text-charcoal/60 mx-auto mb-2" />
+                        <p className="text-charcoal/60 mb-2">Arrastra archivos aquí o haz clic para seleccionar</p>
                         <input type="file" multiple onChange={handleFileUpload} className="hidden" id="file-upload" />
                         <Button
                           type="button"
@@ -689,7 +689,7 @@ export default function ProcurementsPage() {
                         {bidForm.documents.length > 0 && (
                           <div className="mt-2 text-left">
                             {bidForm.documents.map((file, index) => (
-                              <p key={index} className="text-sm text-foreground">
+                              <p key={index} className="text-sm text-charcoal">
                                 {file.name}
                               </p>
                             ))}
@@ -702,31 +702,31 @@ export default function ProcurementsPage() {
 
                 {bidStep === 3 && (
                   <div className="space-y-4">
-                    <h3 className="text-lg font-black text-foreground uppercase">REVISAR OFERTA</h3>
+                    <h3 className="text-lg font-black text-charcoal uppercase">REVISAR OFERTA</h3>
                     <div className="neo-card p-4 space-y-3">
                       <div>
-                        <h4 className="font-bold text-foreground">Proceso:</h4>
-                        <p className="text-muted-foreground">{biddingProcurement?.title}</p>
+                        <h4 className="font-bold text-charcoal">Proceso:</h4>
+                        <p className="text-charcoal/70">{biddingProcurement?.title}</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground">Empresa:</h4>
-                        <p className="text-muted-foreground">
+                        <h4 className="font-bold text-charcoal">Empresa:</h4>
+                        <p className="text-charcoal/70">
                           {bidForm.companyName} - {bidForm.companyNIT}
                         </p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground">Valor Ofertado:</h4>
-                        <p className="text-muted-foreground font-bold text-neo-mocha">
+                        <h4 className="font-bold text-charcoal">Valor Ofertado:</h4>
+                        <p className="text-charcoal/70 font-bold text-mocha">
                           {formatCurrency(Number.parseInt(bidForm.bidAmount) || 0)}
                         </p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground">Tiempo de Entrega:</h4>
-                        <p className="text-muted-foreground">{bidForm.deliveryTime} días</p>
+                        <h4 className="font-bold text-charcoal">Tiempo de Entrega:</h4>
+                        <p className="text-charcoal/70">{bidForm.deliveryTime} días</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground">Documentos:</h4>
-                        <p className="text-muted-foreground">{bidForm.documents.length} archivo(s) adjunto(s)</p>
+                        <h4 className="font-bold text-charcoal">Documentos:</h4>
+                        <p className="text-charcoal/70">{bidForm.documents.length} archivo(s) adjunto(s)</p>
                       </div>
                     </div>
                   </div>
