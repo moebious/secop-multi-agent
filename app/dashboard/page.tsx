@@ -1,179 +1,226 @@
 "use client"
 
 import { Badge } from "@/components/ui/badge"
-
-import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, Users, FileText, Bell } from "lucide-react"
 import Link from "next/link"
-import ProcurementCard from "@/components/procurement-card"
 import NotificationCenter from "@/components/notification-center"
+import QuickActionsDropdown from "@/components/top-bar-navigation"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { useProcurements } from "@/hooks/use-procurements"
+import { useBids } from "@/hooks/use-bids"
+import { useNotifications } from "@/hooks/use-notifications"
+import { useUserStore } from "@/stores/use-user-store"
 
-export default async function DashboardPage() {
-  const supabase = createClient()
+export default function DashboardPage() {
+  const { user: mockProfile } = useUserStore()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: procurementsData, isLoading: procurementsLoading } = useProcurements({
+    limit: 3,
+    status: "open",
+  })
+  const { data: bidsData, isLoading: bidsLoading } = useBids({
+    limit: 10,
+  })
+  const { data: notificationsData, isLoading: notificationsLoading } = useNotifications({
+    unread_only: true,
+  })
 
-  if (!user) {
-    redirect("/auth/login")
-  }
+  const procurements = procurementsData?.procurements || []
+  const bidsCount = bidsData?.bids?.length || 0
+  const procurementsCount = procurementsData?.pagination?.total || 0
+  const unreadNotificationsCount = notificationsData?.notifications?.length || 0
 
-  // Get user profile
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
-
-  if (!profile) {
-    redirect("/auth/login")
-  }
-
-  // Get recent procurements
-  const { data: procurements } = await supabase
-    .from("procurements")
-    .select("*")
-    .eq("status", "open")
-    .order("publication_date", { ascending: false })
-    .limit(6)
-
-  // Get user's bids count
-  const { count: bidsCount } = await supabase
-    .from("bids")
-    .select("*", { count: "exact", head: true })
-    .eq("bidder_id", user.id)
-
-  // Get total procurements count
-  const { count: procurementsCount } = await supabase
-    .from("procurements")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "open")
+  // Mock user for backward compatibility
+  const mockUser = { id: "test-user-id", email: "admin@test.com" }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="neo-card border-b-4 border-charcoal rounded-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-              <p className="text-gray-600">Bienvenido, {profile.full_name}</p>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 sm:py-6 gap-4 sm:gap-0">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-charcoal uppercase tracking-widest truncate">
+                PANEL DE CONTROL
+              </h1>
+              <p className="text-charcoal/80 font-bold text-sm sm:text-base lg:text-lg uppercase truncate">
+                BIENVENIDO, {mockProfile?.full_name || "USUARIO"}
+              </p>
             </div>
-            <div className="flex items-center gap-4">
-              <Badge className="bg-blue-100 text-blue-800 capitalize">{profile.role.replace("_", " ")}</Badge>
-              <NotificationCenter />
-              <Link href="/auth/login">
-                <Button variant="outline" onClick={() => {}}>
-                  Cerrar sesión
-                </Button>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+              <QuickActionsDropdown userRole={mockProfile?.role || "administrator"} />
+              <Link href="/">
+                <Button className="neo-button-primary text-sm sm:text-base px-4 sm:px-6">INICIO</Button>
               </Link>
+              <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-cream/50 border-2 border-charcoal/20 rounded-none">
+                <Badge className="neo-badge bg-mocha text-cream border-charcoal text-xs sm:text-sm">
+                  {mockProfile?.role === "administrator"
+                    ? "ADMINISTRADOR"
+                    : mockProfile?.role === "procurement_officer"
+                      ? "OFICIAL DE COMPRAS"
+                      : mockProfile?.role === "bidder"
+                        ? "LICITADOR"
+                        : mockProfile?.role || "USUARIO"}
+                </Badge>
+                <ThemeToggle />
+                <NotificationCenter />
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
+          <Card className="neo-card bg-muted-pearl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Procesos Abiertos</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm sm:text-base lg:text-lg font-black uppercase tracking-wide text-charcoal">
+                PROCESOS ABIERTOS
+              </CardTitle>
+              <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-mocha" strokeWidth={3} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{procurementsCount || 0}</div>
-              <p className="text-xs text-muted-foreground">Oportunidades disponibles</p>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-mocha">
+                {procurementsLoading ? "..." : procurementsCount}
+              </div>
+              <p className="text-xs sm:text-sm font-bold text-charcoal/80 uppercase">OPORTUNIDADES DISPONIBLES</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="neo-card bg-soft-sage">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Mis Ofertas</CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm sm:text-base lg:text-lg font-black uppercase tracking-wide text-charcoal">
+                MIS OFERTAS
+              </CardTitle>
+              <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-forest" strokeWidth={3} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{bidsCount || 0}</div>
-              <p className="text-xs text-muted-foreground">Ofertas enviadas</p>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-forest">
+                {bidsLoading ? "..." : bidsCount}
+              </div>
+              <p className="text-xs sm:text-sm font-bold text-charcoal/80 uppercase">OFERTAS ENVIADAS</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="neo-card bg-muted-stone">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">En Evaluación</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm sm:text-base lg:text-lg font-black uppercase tracking-wide text-charcoal">
+                EN EVALUACIÓN
+              </CardTitle>
+              <Users className="h-6 w-6 sm:h-8 sm:w-8 text-ocean" strokeWidth={3} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
-              <p className="text-xs text-muted-foreground">Ofertas en revisión</p>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-ocean">
+                {bidsLoading ? "..." : bidsData?.bids?.filter((bid) => bid.status === "submitted").length || 0}
+              </div>
+              <p className="text-xs sm:text-sm font-bold text-charcoal/80 uppercase">OFERTAS EN REVISIÓN</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="neo-card bg-soft-mocha">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Notificaciones</CardTitle>
-              <Bell className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm sm:text-base lg:text-lg font-black uppercase tracking-wide text-charcoal">
+                NOTIFICACIONES
+              </CardTitle>
+              <Bell className="h-6 w-6 sm:h-8 sm:w-8 text-clay" strokeWidth={3} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
-              <p className="text-xs text-muted-foreground">Mensajes nuevos</p>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-clay">
+                {notificationsLoading ? "..." : unreadNotificationsCount}
+              </div>
+              <p className="text-xs sm:text-sm font-bold text-charcoal/80 uppercase">MENSAJES NUEVOS</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Acciones Rápidas</h2>
-          <div className="flex flex-wrap gap-4">
-            <Link href="/dashboard/procurements">
-              <Button className="bg-blue-600 hover:bg-blue-700">Ver Todos los Procesos</Button>
+        <div className="mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-charcoal mb-4 sm:mb-6 uppercase tracking-widest">
+            ACCIONES RÁPIDAS
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap gap-3 sm:gap-4 lg:gap-6">
+            <Link href="/dashboard/procurements" className="w-full lg:w-auto">
+              <Button className="neo-button-secondary text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-3 sm:py-4 w-full lg:w-auto">
+                VER TODOS LOS PROCESOS
+              </Button>
             </Link>
-            {profile.role === "bidder" && (
-              <Link href="/dashboard/bids">
-                <Button variant="outline">Mis Ofertas</Button>
+            {mockProfile?.role === "bidder" && (
+              <Link href="/dashboard/bids" className="w-full lg:w-auto">
+                <Button className="neo-button-primary text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-3 sm:py-4 w-full lg:w-auto">
+                  MIS OFERTAS
+                </Button>
               </Link>
             )}
-            {["administrator", "procurement_officer"].includes(profile.role) && (
-              <Button variant="outline" onClick={() => fetch("/api/procurements/sync", { method: "POST" })}>
-                Sincronizar SECOP II
-              </Button>
+            {["administrator", "procurement_officer"].includes(mockProfile?.role) && (
+              <Link href="/dashboard/admin" className="w-full lg:w-auto">
+                <Button className="neo-button-primary text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-3 sm:py-4 w-full lg:w-auto">
+                  PANEL ADMIN
+                </Button>
+              </Link>
             )}
           </div>
         </div>
 
         {/* Recent Procurements */}
         <div>
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">Procesos Recientes</h2>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 gap-4 sm:gap-0">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-charcoal uppercase tracking-widest">
+              PROCESOS RECIENTES
+            </h2>
             <Link href="/dashboard/procurements">
-              <Button variant="outline">Ver todos</Button>
+              <Button className="neo-button-secondary text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto">
+                VER TODOS
+              </Button>
             </Link>
           </div>
 
-          {procurements && procurements.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {procurements.map((procurement) => (
-                <ProcurementCard
-                  key={procurement.id}
-                  procurement={procurement}
-                  showBidButton={profile.role === "bidder"}
-                />
+          {procurementsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              {[1, 2, 3].map((i) => (
+                <Card key={i} className="neo-card bg-muted-pearl animate-pulse">
+                  <CardContent className="p-4 sm:p-6 lg:p-8">
+                    <div className="h-6 bg-charcoal/20 rounded mb-4"></div>
+                    <div className="h-4 bg-charcoal/20 rounded mb-2"></div>
+                    <div className="h-4 bg-charcoal/20 rounded mb-4"></div>
+                    <div className="flex justify-between items-center">
+                      <div className="h-6 w-20 bg-charcoal/20 rounded"></div>
+                      <div className="h-4 w-24 bg-charcoal/20 rounded"></div>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           ) : (
-            <Card>
-              <CardContent className="text-center py-12">
-                <TrendingUp className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No hay procesos disponibles</h3>
-                <p className="text-gray-600 mb-4">
-                  No se encontraron procesos de contratación abiertos en este momento.
-                </p>
-                {["administrator", "procurement_officer"].includes(profile.role) && (
-                  <Button onClick={() => fetch("/api/procurements/sync", { method: "POST" })}>
-                    Sincronizar SECOP II
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              {procurements.map((procurement, index) => (
+                <Card
+                  key={procurement.id}
+                  className={`neo-card ${
+                    index === 0 ? "bg-muted-sage" : index === 1 ? "bg-muted-stone" : "bg-soft-mocha"
+                  }`}
+                >
+                  <CardContent className="p-4 sm:p-6 lg:p-8">
+                    <h3 className="font-black text-lg sm:text-xl mb-3 sm:mb-4 uppercase tracking-wide text-charcoal">
+                      {procurement.title}
+                    </h3>
+                    <p className="text-charcoal/70 font-bold mb-4 sm:mb-6 uppercase text-xs sm:text-sm">
+                      {procurement.description}
+                    </p>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
+                      <Badge className="neo-badge bg-charcoal text-cream border-charcoal text-xs">
+                        {procurement.status.toUpperCase()}
+                      </Badge>
+                      <span className="text-base sm:text-lg font-black text-mocha uppercase">
+                        ${procurement.tender_value?.toLocaleString()} {procurement.currency}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           )}
         </div>
       </main>
