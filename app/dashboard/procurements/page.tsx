@@ -338,7 +338,7 @@ export default function ProcurementsPage() {
           {filteredProcurements.map((procurement) => (
             <Card
               key={procurement.id}
-              className="neo-card hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-200"
+              className="neo-card hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 h-full flex flex-col"
             >
               <CardHeader className="pb-3 sm:pb-4">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-2 sm:gap-0">
@@ -354,38 +354,42 @@ export default function ProcurementsPage() {
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="space-y-3 sm:space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-start gap-2 text-charcoal/80">
-                    <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                    <span className="font-medium text-sm sm:text-base">{procurement.entity}</span>
+              <CardContent className="flex flex-col flex-1 justify-between space-y-3 sm:space-y-4">
+                <div className="space-y-3 sm:space-y-4 flex-1">
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2 text-charcoal/80">
+                      <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                      <span className="font-medium text-sm sm:text-base">{procurement.entity}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-charcoal/80">
+                      <MapPin className="h-4 w-4 flex-shrink-0" />
+                      <span className="text-sm sm:text-base">{procurement.department}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-charcoal/80">
+                      <DollarSign className="h-4 w-4 flex-shrink-0" />
+                      <span className="font-bold text-mocha text-sm sm:text-base">
+                        {formatCurrency(procurement.value)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-charcoal/80">
-                    <MapPin className="h-4 w-4 flex-shrink-0" />
-                    <span className="text-sm sm:text-base">{procurement.department}</span>
+
+                  <div className="flex-1">
+                    <p className="text-charcoal/70 text-sm line-clamp-3">{procurement.description}</p>
                   </div>
-                  <div className="flex items-center gap-2 text-charcoal/80">
-                    <DollarSign className="h-4 w-4 flex-shrink-0" />
-                    <span className="font-bold text-mocha text-sm sm:text-base">
-                      {formatCurrency(procurement.value)}
-                    </span>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs sm:text-sm text-charcoal/60 gap-2 sm:gap-0">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4 flex-shrink-0" />
+                      <span>Cierra: {new Date(procurement.endDate).toLocaleDateString("es-CO")}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4 flex-shrink-0" />
+                      <span>{procurement.bidders} oferentes</span>
+                    </div>
                   </div>
                 </div>
 
-                <p className="text-charcoal/70 text-sm line-clamp-3">{procurement.description}</p>
-
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs sm:text-sm text-charcoal/60 gap-2 sm:gap-0">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 flex-shrink-0" />
-                    <span>Cierra: {new Date(procurement.endDate).toLocaleDateString("es-CO")}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 flex-shrink-0" />
-                    <span>{procurement.bidders} oferentes</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                <div className="flex flex-col sm:flex-row gap-2 pt-2 mt-auto">
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button className="neo-button-primary flex-1 text-sm sm:text-base" size="sm">
