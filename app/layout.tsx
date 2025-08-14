@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { DM_Sans } from "next/font/google"
 import "./globals.css"
 import MobileNavigation from "@/components/mobile-navigation"
+import { Providers } from "@/components/providers"
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -32,10 +33,12 @@ html {
         `}</style>
       </head>
       <body className={dmSans.className}>
-        <div className="fixed top-4 left-4 z-50 lg:hidden">
-          <MobileNavigation />
-        </div>
-        {children}
+        <Providers>
+          <div className="fixed top-4 left-4 z-50 lg:hidden">
+            <MobileNavigation />
+          </div>
+          {children}
+        </Providers>
       </body>
     </html>
   )

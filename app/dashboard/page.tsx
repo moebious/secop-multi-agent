@@ -7,47 +7,32 @@ import { TrendingUp, Users, FileText, Bell } from "lucide-react"
 import Link from "next/link"
 import NotificationCenter from "@/components/notification-center"
 import QuickActionsDropdown from "@/components/top-bar-navigation"
+import { useProcurements } from "@/hooks/use-procurements"
+import { useBids } from "@/hooks/use-bids"
+import { useNotifications } from "@/hooks/use-notifications"
+import { useUserStore } from "@/stores/use-user-store"
 
 export default function DashboardPage() {
+  const { user: mockProfile } = useUserStore()
+
+  const { data: procurementsData, isLoading: procurementsLoading } = useProcurements({
+    limit: 3,
+    status: "open",
+  })
+  const { data: bidsData, isLoading: bidsLoading } = useBids({
+    limit: 10,
+  })
+  const { data: notificationsData, isLoading: notificationsLoading } = useNotifications({
+    unread_only: true,
+  })
+
+  const procurements = procurementsData?.procurements || []
+  const bidsCount = bidsData?.bids?.length || 0
+  const procurementsCount = procurementsData?.pagination?.total || 0
+  const unreadNotificationsCount = notificationsData?.notifications?.length || 0
+
+  // Mock user for backward compatibility
   const mockUser = { id: "test-user-id", email: "admin@test.com" }
-  const mockProfile = {
-    id: "test-user-id",
-    full_name: "Administrador de Prueba",
-    role: "administrator",
-    company_name: "Empresa de Prueba",
-    email: "admin@test.com",
-  }
-
-  // Get recent procurements
-  const procurements = [
-    {
-      id: 1,
-      title: "PROCESO DE CONTRATACIÓN #1",
-      description: "DESCRIPCIÓN DEL PROCESO DE CONTRATACIÓN DE SERVICIOS TECNOLÓGICOS.",
-      status: "ABIERTO",
-      budget: "$500,000,000 COP",
-    },
-    {
-      id: 2,
-      title: "PROCESO DE CONTRATACIÓN #2",
-      description: "DESCRIPCIÓN DEL PROCESO DE CONTRATACIÓN DE SERVICIOS TECNOLÓGICOS.",
-      status: "ABIERTO",
-      budget: "$500,000,000 COP",
-    },
-    {
-      id: 3,
-      title: "PROCESO DE CONTRATACIÓN #3",
-      description: "DESCRIPCIÓN DEL PROCESO DE CONTRATACIÓN DE SERVICIOS TECNOLÓGICOS.",
-      status: "ABIERTO",
-      budget: "$500,000,000 COP",
-    },
-  ]
-
-  // Get user's bids count
-  const bidsCount = 5
-
-  // Get total procurements count
-  const procurementsCount = 12
 
   return (
     <div className="min-h-screen bg-cream">
@@ -60,23 +45,23 @@ export default function DashboardPage() {
                 PANEL DE CONTROL
               </h1>
               <p className="text-charcoal/80 font-bold text-sm sm:text-base lg:text-lg uppercase truncate">
-                BIENVENIDO, {mockProfile.full_name}
+                BIENVENIDO, {mockProfile?.full_name || "USUARIO"}
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-              <QuickActionsDropdown userRole={mockProfile.role} />
+              <QuickActionsDropdown userRole={mockProfile?.role || "administrator"} />
               <Link href="/">
                 <Button className="neo-button-primary text-sm sm:text-base px-4 sm:px-6">INICIO</Button>
               </Link>
               <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-cream/50 border-2 border-charcoal/20 rounded-none">
                 <Badge className="neo-badge bg-mocha text-cream border-charcoal text-xs sm:text-sm">
-                  {mockProfile.role === "administrator"
+                  {mockProfile?.role === "administrator"
                     ? "ADMINISTRADOR"
-                    : mockProfile.role === "procurement_officer"
+                    : mockProfile?.role === "procurement_officer"
                       ? "OFICIAL DE COMPRAS"
-                      : mockProfile.role === "bidder"
+                      : mockProfile?.role === "bidder"
                         ? "LICITADOR"
-                        : mockProfile.role}
+                        : mockProfile?.role || "USUARIO"}
                 </Badge>
                 <NotificationCenter />
               </div>
@@ -96,7 +81,9 @@ export default function DashboardPage() {
               <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-mocha" strokeWidth={3} />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-mocha">{procurementsCount || 0}</div>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-mocha">
+                {procurementsLoading ? "..." : procurementsCount}
+              </div>
               <p className="text-xs sm:text-sm font-bold text-charcoal/80 uppercase">OPORTUNIDADES DISPONIBLES</p>
             </CardContent>
           </Card>
@@ -109,7 +96,9 @@ export default function DashboardPage() {
               <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-forest" strokeWidth={3} />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-forest">{bidsCount || 0}</div>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-forest">
+                {bidsLoading ? "..." : bidsCount}
+              </div>
               <p className="text-xs sm:text-sm font-bold text-charcoal/80 uppercase">OFERTAS ENVIADAS</p>
             </CardContent>
           </Card>
@@ -122,7 +111,9 @@ export default function DashboardPage() {
               <Users className="h-6 w-6 sm:h-8 sm:w-8 text-ocean" strokeWidth={3} />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-ocean">3</div>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-ocean">
+                {bidsLoading ? "..." : bidsData?.bids?.filter((bid) => bid.status === "submitted").length || 0}
+              </div>
               <p className="text-xs sm:text-sm font-bold text-charcoal/80 uppercase">OFERTAS EN REVISIÓN</p>
             </CardContent>
           </Card>
@@ -135,7 +126,9 @@ export default function DashboardPage() {
               <Bell className="h-6 w-6 sm:h-8 sm:w-8 text-clay" strokeWidth={3} />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-clay">7</div>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-clay">
+                {notificationsLoading ? "..." : unreadNotificationsCount}
+              </div>
               <p className="text-xs sm:text-sm font-bold text-charcoal/80 uppercase">MENSAJES NUEVOS</p>
             </CardContent>
           </Card>
@@ -152,14 +145,14 @@ export default function DashboardPage() {
                 VER TODOS LOS PROCESOS
               </Button>
             </Link>
-            {mockProfile.role === "bidder" && (
+            {mockProfile?.role === "bidder" && (
               <Link href="/dashboard/bids" className="w-full lg:w-auto">
                 <Button className="neo-button-primary text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-3 sm:py-4 w-full lg:w-auto">
                   MIS OFERTAS
                 </Button>
               </Link>
             )}
-            {["administrator", "procurement_officer"].includes(mockProfile.role) && (
+            {["administrator", "procurement_officer"].includes(mockProfile?.role) && (
               <Link href="/dashboard/admin" className="w-full lg:w-auto">
                 <Button className="neo-button-primary text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-3 sm:py-4 w-full lg:w-auto">
                   PANEL ADMIN
@@ -182,31 +175,51 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            {procurements.map((procurement, index) => (
-              <Card
-                key={procurement.id}
-                className={`neo-card ${
-                  index === 0 ? "bg-muted-sage" : index === 1 ? "bg-muted-stone" : "bg-soft-mocha"
-                }`}
-              >
-                <CardContent className="p-4 sm:p-6 lg:p-8">
-                  <h3 className="font-black text-lg sm:text-xl mb-3 sm:mb-4 uppercase tracking-wide text-charcoal">
-                    {procurement.title}
-                  </h3>
-                  <p className="text-charcoal/70 font-bold mb-4 sm:mb-6 uppercase text-xs sm:text-sm">
-                    {procurement.description}
-                  </p>
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
-                    <Badge className="neo-badge bg-charcoal text-cream border-charcoal text-xs">
-                      {procurement.status}
-                    </Badge>
-                    <span className="text-base sm:text-lg font-black text-mocha uppercase">{procurement.budget}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {procurementsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              {[1, 2, 3].map((i) => (
+                <Card key={i} className="neo-card bg-muted-pearl animate-pulse">
+                  <CardContent className="p-4 sm:p-6 lg:p-8">
+                    <div className="h-6 bg-charcoal/20 rounded mb-4"></div>
+                    <div className="h-4 bg-charcoal/20 rounded mb-2"></div>
+                    <div className="h-4 bg-charcoal/20 rounded mb-4"></div>
+                    <div className="flex justify-between items-center">
+                      <div className="h-6 w-20 bg-charcoal/20 rounded"></div>
+                      <div className="h-4 w-24 bg-charcoal/20 rounded"></div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              {procurements.map((procurement, index) => (
+                <Card
+                  key={procurement.id}
+                  className={`neo-card ${
+                    index === 0 ? "bg-muted-sage" : index === 1 ? "bg-muted-stone" : "bg-soft-mocha"
+                  }`}
+                >
+                  <CardContent className="p-4 sm:p-6 lg:p-8">
+                    <h3 className="font-black text-lg sm:text-xl mb-3 sm:mb-4 uppercase tracking-wide text-charcoal">
+                      {procurement.title}
+                    </h3>
+                    <p className="text-charcoal/70 font-bold mb-4 sm:mb-6 uppercase text-xs sm:text-sm">
+                      {procurement.description}
+                    </p>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
+                      <Badge className="neo-badge bg-charcoal text-cream border-charcoal text-xs">
+                        {procurement.status.toUpperCase()}
+                      </Badge>
+                      <span className="text-base sm:text-lg font-black text-mocha uppercase">
+                        ${procurement.tender_value?.toLocaleString()} {procurement.currency}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>
