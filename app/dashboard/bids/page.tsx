@@ -1,40 +1,36 @@
-import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { FileText, Calendar, Building, Eye, Edit } from "lucide-react"
 import Link from "next/link"
 
-export default async function BidsPage() {
-  const supabase = createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect("/auth/login")
+export default function BidsPage() {
+  const mockProfile = {
+    id: "test-user-id",
+    full_name: "Test User",
+    role: "bidder",
+    company_name: "Test Company",
   }
 
-  // Get user profile
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
-
-  if (!profile) {
-    redirect("/auth/login")
-  }
-
-  // Get user's bids with procurement details
-  const { data: bids } = await supabase
-    .from("bids")
-    .select(
-      `
-      *,
-      procurement:procurements(id, title, buyer_name, status, closing_date, tender_value, currency)
-    `,
-    )
-    .eq("bidder_id", user.id)
-    .order("created_at", { ascending: false })
+  const mockBids = [
+    {
+      id: 1,
+      bid_amount: 450000000,
+      notes: "Propuesta técnica completa",
+      status: "submitted",
+      created_at: "2024-01-25",
+      submitted_at: "2024-01-26",
+      procurement: {
+        id: 1,
+        title: "Servicios de Tecnología - Desarrollo de Software",
+        buyer_name: "Ministerio de Tecnologías",
+        status: "open",
+        closing_date: "2024-02-15",
+        tender_value: 500000000,
+        currency: "COP",
+      },
+    },
+  ]
 
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat("es-CO", {
@@ -105,7 +101,7 @@ export default async function BidsPage() {
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{bids?.length || 0}</div>
+              <div className="text-2xl font-bold">{mockBids?.length || 0}</div>
             </CardContent>
           </Card>
 
@@ -115,7 +111,7 @@ export default async function BidsPage() {
               <Edit className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{bids?.filter((b) => b.status === "draft").length || 0}</div>
+              <div className="text-2xl font-bold">{mockBids?.filter((b) => b.status === "draft").length || 0}</div>
             </CardContent>
           </Card>
 
@@ -125,7 +121,7 @@ export default async function BidsPage() {
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{bids?.filter((b) => b.status === "submitted").length || 0}</div>
+              <div className="text-2xl font-bold">{mockBids?.filter((b) => b.status === "submitted").length || 0}</div>
             </CardContent>
           </Card>
 
@@ -135,15 +131,15 @@ export default async function BidsPage() {
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{bids?.filter((b) => b.status === "accepted").length || 0}</div>
+              <div className="text-2xl font-bold">{mockBids?.filter((b) => b.status === "accepted").length || 0}</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Bids List */}
         <div className="space-y-6">
-          {bids && bids.length > 0 ? (
-            bids.map((bid) => (
+          {mockBids && mockBids.length > 0 ? (
+            mockBids.map((bid) => (
               <Card key={bid.id} className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <div className="flex justify-between items-start">

@@ -4,32 +4,33 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* 2025 Neutral & Edgy Neobrutalism Palette */
+  --background: oklch(1 0 0); /* Warm cream */
+  --foreground: oklch(0.145 0 0); /* Deep charcoal */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.205 0 0); /* Mocha Mousse - Pantone 2025 */
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --secondary: oklch(0.97 0 0); /* Deep forest green */
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
+  --muted: oklch(0.97 0 0); /* Warm gray */
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
+  --accent: oklch(0.97 0 0); /* Deep ocean blue */
   --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
+  --destructive: oklch(0.577 0.245 27.325); /* Muted red */
   --destructive-foreground: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
+  --chart-1: oklch(0.646 0.222 41.116); /* Mocha */
+  --chart-2: oklch(0.6 0.118 184.704); /* Forest green */
+  --chart-3: oklch(0.398 0.07 227.392); /* Clay/terracotta */
+  --chart-4: oklch(0.828 0.189 84.429); /* Ocean blue */
+  --chart-5: oklch(0.769 0.188 70.08); /* Metallic silver */
+  --radius: 0.625rem; /* Rounded corners */
+  --sidebar: oklch(0.985 0 0); /* Light warm gray */
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -37,36 +38,22 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-
-  /* Neobrutalism Color Palette */
-  --cream: #f7f3e9;
-  --charcoal: #2a2a2a;
-  --mocha: #8b6f47;
-  --ocean: #1e4a5f;
-  --forest: #2d5a3d;
-  --clay: #b87333;
-  --pearl: #f5f5f0;
-  --sage: #9caf88;
-  --stone: #d4c4a8;
-  --soft-mocha: #a68b5b;
-  --border: var(--charcoal);
-  --card: var(--cream);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
+  --background: oklch(0.145 0 0); /* Deep charcoal */
+  --foreground: oklch(0.985 0 0); /* Warm cream */
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0); /* Lighter mocha for dark mode */
   --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
+  --secondary: oklch(0.269 0 0); /* Lighter forest green */
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
+  --accent: oklch(0.269 0 0); /* Lighter ocean blue */
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
@@ -133,166 +120,171 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Updated font from Courier New monospace to DM Sans */
+    font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+    font-weight: 600;
   }
-}
 
-/* Neobrutalism Components */
-.neo-card {
-  border: 4px solid var(--border);
-  background-color: var(--card);
-  transition: all 0.2s ease-in-out;
-}
+  /* Updated neo-card to only show shadow on hover */
+  .neo-card {
+    border: 4px solid var(--border);
+    background-color: var(--card);
+    transition: all 0.15s ease;
+  }
 
-.neo-card:hover {
-  box-shadow: 8px 8px 0px 0px rgba(42, 42, 42, 1);
-  transform: translateY(-2px);
-}
+  .neo-card:hover {
+    box-shadow: 8px 8px 0px 0px rgba(42, 42, 42, 1);
+    transform: translate(-2px, -2px);
+  }
 
-.neo-button {
-  border: 4px solid var(--charcoal);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: all 0.2s ease-in-out;
-}
+  .neo-button {
+    border: 4px solid var(--border);
+    box-shadow: 4px 4px 0px 0px rgba(42, 42, 42, 1);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.1s ease;
+  }
 
-.neo-button:hover {
-  box-shadow: 6px 6px 0px 0px rgba(42, 42, 42, 1);
-  transform: translateY(-2px);
-}
+  .neo-button:hover {
+    box-shadow: 2px 2px 0px 0px rgba(42, 42, 42, 1);
+    transform: translate(2px, 2px);
+  }
 
-.neo-button-primary {
-  background-color: var(--charcoal);
-  color: var(--cream);
-  border: 4px solid var(--charcoal);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: all 0.2s ease-in-out;
-}
+  .neo-button:active {
+    box-shadow: none;
+    transform: translate(4px, 4px);
+  }
 
-.neo-button-primary:hover {
-  background-color: var(--mocha);
-  border-color: var(--mocha);
-  box-shadow: 6px 6px 0px 0px rgba(42, 42, 42, 1);
-  transform: translateY(-2px);
-}
+  /* Added primary and secondary button styles with enhanced hover animations */
+  .neo-button-primary {
+    border: 4px solid #2a2a2a;
+    background-color: #8b6f47; /* Mocha */
+    color: #ffffff;
+    box-shadow: 6px 6px 0px 0px rgba(42, 42, 42, 1);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.15s ease;
+  }
 
-.neo-button-secondary {
-  background-color: var(--cream);
-  color: var(--charcoal);
-  border: 4px solid var(--charcoal);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: all 0.2s ease-in-out;
-}
+  .neo-button-primary:hover {
+    background-color: #2d5a3d; /* Forest green on hover */
+    box-shadow: 12px 12px 0px 0px rgba(42, 42, 42, 1);
+    transform: translate(-3px, -3px);
+  }
 
-.neo-button-secondary:hover {
-  background-color: var(--mocha);
-  color: var(--cream);
-  border-color: var(--mocha);
-  box-shadow: 6px 6px 0px 0px rgba(42, 42, 42, 1);
-  transform: translateY(-2px);
-}
+  .neo-button-primary:active {
+    box-shadow: 2px 2px 0px 0px rgba(42, 42, 42, 1);
+    transform: translate(4px, 4px);
+  }
 
-.neo-badge {
-  border: 3px solid var(--charcoal);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
+  .neo-button-secondary {
+    border: 4px solid #2a2a2a;
+    background-color: #2d5a3d; /* Forest green */
+    color: #ffffff;
+    box-shadow: 6px 6px 0px 0px rgba(42, 42, 42, 1);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.15s ease;
+  }
 
-/* Utility Classes */
-.bg-cream {
-  background-color: var(--cream);
-}
-.bg-charcoal {
-  background-color: var(--charcoal);
-}
-.bg-mocha {
-  background-color: var(--mocha);
-}
-.bg-ocean {
-  background-color: var(--ocean);
-}
-.bg-forest {
-  background-color: var(--forest);
-}
-.bg-clay {
-  background-color: var(--clay);
-}
-.bg-pearl {
-  background-color: var(--pearl);
-}
-.bg-sage {
-  background-color: var(--sage);
-}
-.bg-stone {
-  background-color: var(--stone);
-}
-.bg-soft-mocha {
-  background-color: var(--soft-mocha);
-}
+  .neo-button-secondary:hover {
+    background-color: #1e4a5f; /* Ocean blue on hover */
+    box-shadow: 12px 12px 0px 0px rgba(42, 42, 42, 1);
+    transform: translate(-3px, -3px);
+  }
 
-.text-cream {
-  color: var(--cream);
-}
-.text-charcoal {
-  color: var(--charcoal);
-}
-.text-mocha {
-  color: var(--mocha);
-}
-.text-ocean {
-  color: var(--ocean);
-}
-.text-forest {
-  color: var(--forest);
-}
-.text-clay {
-  color: var(--clay);
-}
-.text-pearl {
-  color: var(--pearl);
-}
-.text-sage {
-  color: var(--sage);
-}
-.text-stone {
-  color: var(--stone);
-}
-.text-soft-mocha {
-  color: var(--soft-mocha);
-}
+  .neo-button-secondary:active {
+    box-shadow: 2px 2px 0px 0px rgba(42, 42, 42, 1);
+    transform: translate(4px, 4px);
+  }
 
-.border-cream {
-  border-color: var(--cream);
-}
-.border-charcoal {
-  border-color: var(--charcoal);
-}
-.border-mocha {
-  border-color: var(--mocha);
-}
-.border-ocean {
-  border-color: var(--ocean);
-}
-.border-forest {
-  border-color: var(--forest);
-}
-.border-clay {
-  border-color: var(--clay);
-}
-.border-pearl {
-  border-color: var(--pearl);
-}
-.border-sage {
-  border-color: var(--sage);
-}
-.border-stone {
-  border-color: var(--stone);
-}
-.border-soft-mocha {
-  border-color: var(--soft-mocha);
+  /* Added custom color classes for homepage theme */
+  .bg-cream {
+    background-color: #faf8f5;
+  }
+  .bg-charcoal {
+    background-color: #2a2a2a;
+  }
+  .bg-mocha {
+    background-color: #8b6f47;
+  }
+  .bg-forest {
+    background-color: #2d5a3d;
+  }
+  .bg-ocean {
+    background-color: #1e4a5f;
+  }
+  .bg-clay {
+    background-color: #b87333;
+  }
+
+  /* Added subtle, muted color variants for cards */
+  .bg-muted-sage {
+    background-color: #e8ede9; /* Very light sage green */
+  }
+  .bg-muted-stone {
+    background-color: #ebe8e3; /* Warm light stone */
+  }
+  .bg-muted-sand {
+    background-color: #f0ede8; /* Light sand */
+  }
+  .bg-muted-pearl {
+    background-color: #f5f3f0; /* Pearl white */
+  }
+  .bg-soft-mocha {
+    background-color: #d4c4b0; /* Soft mocha */
+  }
+  .bg-soft-sage {
+    background-color: #c8d5ca; /* Soft sage */
+  }
+  .bg-soft-slate {
+    background-color: #d1d5d8; /* Soft slate blue */
+  }
+
+  .text-cream {
+    color: #faf8f5;
+  }
+  .text-charcoal {
+    color: #2a2a2a;
+  }
+  .text-mocha {
+    color: #8b6f47;
+  }
+  .text-forest {
+    color: #2d5a3d;
+  }
+  .text-ocean {
+    color: #1e4a5f;
+  }
+  .text-clay {
+    color: #b87333;
+  }
+
+  .neo-input {
+    border: 4px solid var(--border);
+    background-color: var(--input);
+    font-weight: bold;
+  }
+
+  .neo-badge {
+    border: 2px solid var(--border);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
 }
