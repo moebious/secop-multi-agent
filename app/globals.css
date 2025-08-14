@@ -38,6 +38,15 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Custom neobrutalism colors that adapt to theme */
+  --neo-cream: oklch(1 0 0);
+  --neo-charcoal: oklch(0.145 0 0);
+  --neo-mocha: oklch(0.646 0.222 41.116);
+  --neo-forest: oklch(0.6 0.118 184.704);
+  --neo-ocean: oklch(0.398 0.07 227.392);
+  --neo-clay: oklch(0.828 0.189 84.429);
+  --neo-shadow: rgba(42, 42, 42, 1);
 }
 
 .dark {
@@ -73,6 +82,15 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+
+  /* Dark mode neobrutalism colors */
+  --neo-cream: oklch(0.145 0 0);
+  --neo-charcoal: oklch(0.985 0 0);
+  --neo-mocha: oklch(0.769 0.188 70.08);
+  --neo-forest: oklch(0.696 0.17 162.48);
+  --neo-ocean: oklch(0.627 0.265 303.9);
+  --neo-clay: oklch(0.645 0.246 16.439);
+  --neo-shadow: rgba(255, 255, 255, 0.3);
 }
 
 @theme inline {
@@ -120,171 +138,5 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Updated font from Courier New monospace to DM Sans */
-    font-family: var(--font-dm-sans), "DM Sans", sans-serif;
-    font-weight: 600;
-  }
-
-  /* Updated neo-card to only show shadow on hover */
-  .neo-card {
-    border: 4px solid var(--border);
-    background-color: var(--card);
-    transition: all 0.15s ease;
-  }
-
-  .neo-card:hover {
-    box-shadow: 8px 8px 0px 0px rgba(42, 42, 42, 1);
-    transform: translate(-2px, -2px);
-  }
-
-  .neo-button {
-    border: 4px solid var(--border);
-    box-shadow: 4px 4px 0px 0px rgba(42, 42, 42, 1);
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: all 0.1s ease;
-  }
-
-  .neo-button:hover {
-    box-shadow: 2px 2px 0px 0px rgba(42, 42, 42, 1);
-    transform: translate(2px, 2px);
-  }
-
-  .neo-button:active {
-    box-shadow: none;
-    transform: translate(4px, 4px);
-  }
-
-  /* Added primary and secondary button styles with enhanced hover animations */
-  .neo-button-primary {
-    border: 4px solid #2a2a2a;
-    background-color: #8b6f47; /* Mocha */
-    color: #ffffff;
-    box-shadow: 6px 6px 0px 0px rgba(42, 42, 42, 1);
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: all 0.15s ease;
-  }
-
-  .neo-button-primary:hover {
-    background-color: #2d5a3d; /* Forest green on hover */
-    box-shadow: 12px 12px 0px 0px rgba(42, 42, 42, 1);
-    transform: translate(-3px, -3px);
-  }
-
-  .neo-button-primary:active {
-    box-shadow: 2px 2px 0px 0px rgba(42, 42, 42, 1);
-    transform: translate(4px, 4px);
-  }
-
-  .neo-button-secondary {
-    border: 4px solid #2a2a2a;
-    background-color: #2d5a3d; /* Forest green */
-    color: #ffffff;
-    box-shadow: 6px 6px 0px 0px rgba(42, 42, 42, 1);
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: all 0.15s ease;
-  }
-
-  .neo-button-secondary:hover {
-    background-color: #1e4a5f; /* Ocean blue on hover */
-    box-shadow: 12px 12px 0px 0px rgba(42, 42, 42, 1);
-    transform: translate(-3px, -3px);
-  }
-
-  .neo-button-secondary:active {
-    box-shadow: 2px 2px 0px 0px rgba(42, 42, 42, 1);
-    transform: translate(4px, 4px);
-  }
-
-  /* Added custom color classes for homepage theme */
-  .bg-cream {
-    background-color: #faf8f5;
-  }
-  .bg-charcoal {
-    background-color: #2a2a2a;
-  }
-  .bg-mocha {
-    background-color: #8b6f47;
-  }
-  .bg-forest {
-    background-color: #2d5a3d;
-  }
-  .bg-ocean {
-    background-color: #1e4a5f;
-  }
-  .bg-clay {
-    background-color: #b87333;
-  }
-
-  /* Added subtle, muted color variants for cards */
-  .bg-muted-sage {
-    background-color: #e8ede9; /* Very light sage green */
-  }
-  .bg-muted-stone {
-    background-color: #ebe8e3; /* Warm light stone */
-  }
-  .bg-muted-sand {
-    background-color: #f0ede8; /* Light sand */
-  }
-  .bg-muted-pearl {
-    background-color: #f5f3f0; /* Pearl white */
-  }
-  .bg-soft-mocha {
-    background-color: #d4c4b0; /* Soft mocha */
-  }
-  .bg-soft-sage {
-    background-color: #c8d5ca; /* Soft sage */
-  }
-  .bg-soft-slate {
-    background-color: #d1d5d8; /* Soft slate blue */
-  }
-
-  .text-cream {
-    color: #faf8f5;
-  }
-  .text-charcoal {
-    color: #2a2a2a;
-  }
-  .text-mocha {
-    color: #8b6f47;
-  }
-  .text-forest {
-    color: #2d5a3d;
-  }
-  .text-ocean {
-    color: #1e4a5f;
-  }
-  .text-clay {
-    color: #b87333;
-  }
-
-  .neo-input {
-    border: 4px solid var(--border);
-    background-color: var(--input);
-    font-weight: bold;
-  }
-
-  .neo-badge {
-    border: 2px solid var(--border);
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.75rem;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
   }
 }
