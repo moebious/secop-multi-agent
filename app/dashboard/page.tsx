@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, Users, FileText, Bell } from "lucide-react"
 import Link from "next/link"
 import NotificationCenter from "@/components/notification-center"
+import QuickActionsDropdown from "@/components/top-bar-navigation"
 
 export default function DashboardPage() {
   const mockUser = { id: "test-user-id", email: "admin@test.com" }
@@ -63,6 +64,7 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+              <QuickActionsDropdown userRole={mockProfile.role} />
               <Link href="/">
                 <Button className="neo-button-primary text-sm sm:text-base px-4 sm:px-6">INICIO</Button>
               </Link>
