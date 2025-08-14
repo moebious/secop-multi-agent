@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { DM_Sans } from "next/font/google"
 import "./globals.css"
 import MobileNavigation from "@/components/mobile-navigation"
+import TopBarNavigation from "@/components/top-bar-navigation"
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -35,6 +36,7 @@ html {
         <div className="fixed top-4 left-4 z-50 lg:hidden">
           <MobileNavigation />
         </div>
+        <TopBarNavigation />
         {children}
       </body>
     </html>
