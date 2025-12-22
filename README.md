@@ -1,30 +1,206 @@
-# Multi Agent Platform
-
-*Automatically synced with your [v0.app](https://v0.app) deployments*
-
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/kevin-vicents-projects/v0-multi-agent-platform)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/XXKiPVxtKgf)
+# Rúbrica - AI Deterministic Audit Engine for Colombian Bidding
 
 ## Overview
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+**Rúbrica** is a deterministic audit system designed for Colombia's public procurement platform (SECOP). Built on the principle of **"Deterministic Truth"**, it eliminates AI hallucinations through math-based sandboxing and provides transparent, auditable analysis of government bidding processes.
 
-## Deployment
+## Core Philosophy: Deterministic Truth
 
-Your project is live at:
+Traditional AI systems introduce uncertainty through probabilistic reasoning. Rúbrica takes a different approach:
 
-**[https://vercel.com/kevin-vicents-projects/v0-multi-agent-platform](https://vercel.com/kevin-vicents-projects/v0-multi-agent-platform)**
+- **Zero Hallucinations**: Mathematical operations run in isolated E2B sandboxes
+- **Verifiable Results**: Every calculation can be traced and audited
+- **Durable Execution**: Human-in-the-Loop (HITL) checkpoints ensure oversight
+- **Multi-Feed Ingestion**: Process RUP (Registro Único de Proponentes) data from multiple sources
 
-## Build your app
+## Architecture
 
-Continue building your app on:
+```
+┌─────────────────┐
+│   Multi-Feed    │ RUP XML/JSON/CSV
+│   Ingestion     │──────────┐
+└─────────────────┘          │
+                             ▼
+┌─────────────────────────────────────┐
+│      Core Python Engine             │
+│  ┌──────────┐      ┌─────────────┐ │
+│  │ Pydantic │      │   Polars    │ │
+│  │ Schemas  │──────│  Analytics  │ │
+│  └──────────┘      └─────────────┘ │
+│         │                  │        │
+│         ▼                  ▼        │
+│  ┌──────────────────────────────┐  │
+│  │   Deterministic Auditor      │  │
+│  │   (Math in E2B Sandbox)      │  │
+│  └──────────────────────────────┘  │
+└─────────────────────────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────────┐
+│    Workflows (Inngest)              │
+│    - Durable Execution              │
+│    - HITL Checkpoints               │
+└─────────────────────────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────────┐
+│    Next.js Frontend (Vercel AI SDK) │
+│    - Real-time audit dashboards     │
+│    - Human approval interfaces      │
+└─────────────────────────────────────┘
+```
 
-**[https://v0.app/chat/projects/XXKiPVxtKgf](https://v0.app/chat/projects/XXKiPVxtKgf)**
+## Technology Stack
 
-## How It Works
+### Backend (Python)
+- **Polars**: High-performance DataFrame operations for large-scale data
+- **Pydantic**: Type-safe schemas for RUP data structures
+- **E2B**: Isolated code execution sandboxes for mathematical operations
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+### Frontend (Next.js)
+- **Vercel AI SDK**: Streaming AI responses with deterministic backend
+- **Inngest**: Durable workflow execution with HITL support
+- **React**: Modern UI for audit visualization
+
+## Project Structure
+
+```
+/
+├── core/                    # Python core logic
+│   ├── rubrica/
+│   │   ├── schemas/        # Pydantic models for RUP data
+│   │   ├── auditor/        # Deterministic audit engine
+│   │   └── __init__.py
+│   ├── pyproject.toml      # Python dependencies
+│   └── README.md
+│
+├── apps/
+│   └── web/                # Next.js web application
+│       ├── app/            # Next.js app directory
+│       ├── components/     # React components
+│       └── package.json
+│
+├── workflows/              # Inngest workflow definitions
+│   ├── audit-pipeline.ts   # Main audit workflow
+│   └── README.md
+│
+├── docker-compose.yml      # Development environment
+└── README.md              # This file
+```
+
+## Multi-Feed Ingestion
+
+Rúbrica supports multiple data sources for Colombian procurement:
+
+1. **RUP API**: Real-time procurement registry data
+2. **SECOP I**: Legacy system integration
+3. **SECOP II**: Current platform data feeds
+4. **Manual Uploads**: CSV/Excel file processing
+
+All feeds are normalized to unified Pydantic schemas, ensuring consistency.
+
+## Deterministic Processing
+
+### How We Ensure Zero Hallucinations
+
+1. **Schema Validation**: All input data validated against Pydantic models
+2. **Math Sandboxing**: Numerical operations executed in E2B isolated environments
+3. **Audit Trail**: Every calculation logged with inputs/outputs
+4. **Human Checkpoints**: Critical decisions require HITL approval via Inngest
+
+### Example Workflow
+
+```python
+# Pseudo-code illustration
+async def audit_bid(rup_data: RUPSchema) -> AuditResult:
+    # 1. Validate input
+    validated = RUPValidator.validate(rup_data)
+    
+    # 2. Execute math in sandbox
+    financial_score = await e2b_sandbox.run(
+        calculate_financial_score,
+        validated.financial_data
+    )
+    
+    # 3. HITL checkpoint
+    if financial_score.requires_review:
+        await inngest.wait_for_human_approval(financial_score)
+    
+    # 4. Return deterministic result
+    return AuditResult(
+        score=financial_score,
+        audit_trail=sandbox.get_logs()
+    )
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Docker & Docker Compose
+- Python 3.11+
+- Node.js 18+
+- pnpm
+
+### Quick Start
+
+```bash
+# Clone repository
+git clone https://github.com/moebious/secop-multi-agent.git
+cd secop-multi-agent
+
+# Start development environment
+docker-compose up -d
+
+# Install Python dependencies
+cd core
+pip install -e .
+
+# Install frontend dependencies
+cd ../apps/web
+pnpm install
+
+# Start development servers
+pnpm dev
+```
+
+### Development Workflow
+
+1. **Backend Changes**: Edit Python code in `/core`
+2. **Frontend Changes**: Edit Next.js code in `/apps/web`
+3. **Workflows**: Define durable workflows in `/workflows`
+4. **Testing**: Run `pytest` for Python, `pnpm test` for TypeScript
+
+## RUP Data Schema
+
+The Colombian RUP (Registro Único de Proponentes) contains:
+
+- **Proveedor Info**: Supplier identification and legal data
+- **Experiencia**: Historical contract experience
+- **Capacidad Financiera**: Financial capacity metrics
+- **Capacidad Organizacional**: Organizational capabilities
+
+All fields are typed and validated through Pydantic.
+
+## Roadmap
+
+- [x] Initial project scaffolding
+- [ ] RUP schema implementation
+- [ ] E2B sandbox integration
+- [ ] Basic auditor logic
+- [ ] Inngest workflow setup
+- [ ] Frontend dashboard
+- [ ] Multi-feed connectors
+- [ ] Production deployment
+
+## Contributing
+
+This is an initial scaffolding. Contributions welcome as we build out the deterministic audit capabilities.
+
+## License
+
+MIT
+
+## Contact
+
+For questions about Colombian procurement or the Rúbrica system, please open an issue.

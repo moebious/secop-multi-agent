@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  # Python Core Service
+  core:
+    build:
+      context: ./core
+      dockerfile: Dockerfile
+    container_name: rubrica-core
+    volumes:
+      - ./core:/app
+      - python-cache:/root/.cache
+    environment:
+      - PYTHONUNBUFFERED=1
+      - E2B_API_KEY=${E2B_API_KEY:-}
+    ports:
+      - "8000:8000"
+    networks:
+      - rubrica-network
+    command: >
+      sh -c "pip install -e . && python -m uvicorn rubrica.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  # Next.js Web Application
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: rubrica-web
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://core:8000
+    ports:
+      - "3000:3000"
+    networks:
+      - rubrica-network
+    depends_on:
+      - core
+    command: pnpm dev
+
+  # PostgreSQL Database (for audit trails and workflow state)
+  postgres:
+    image: postgres:16-alpine
+    container_name: rubrica-postgres
+    environment:
+      - POSTGRES_USER=rubrica
+      - POSTGRES_PASSWORD=rubrica_dev
+      - POSTGRES_DB=rubrica_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - rubrica-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rubrica"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis (for caching and workflow queues)
+  redis:
+    image: redis:7-alpine
+    container_name: rubrica-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - rubrica-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
+  redis-data:
+  python-cache:
+
+networks:
+  rubrica-network:
+    driver: bridge
