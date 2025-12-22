@@ -44,7 +44,7 @@ Traditional AI systems introduce uncertainty through probabilistic reasoning. R�
                  │
                  ▼
 ┌─────────────────────────────────────┐
-│    Next.js Frontend (Vercel AI SDK) │
+│    Next.js Frontend                 │
 │    - Real-time audit dashboards     │
 │    - Human approval interfaces      │
 └─────────────────────────────────────┘
@@ -58,7 +58,6 @@ Traditional AI systems introduce uncertainty through probabilistic reasoning. R�
 - **E2B**: Isolated code execution sandboxes for mathematical operations
 
 ### Frontend (Next.js)
-- **Vercel AI SDK**: Streaming AI responses with deterministic backend
 - **Inngest**: Durable workflow execution with HITL support
 - **React**: Modern UI for audit visualization
 
